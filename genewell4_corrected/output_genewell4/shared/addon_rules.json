@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "description": "Genewell Addon Rules — Phase 3",
+
+  "gender_restrictions": {
+    "male": {
+      "hide": ["addon_women_hormone", "addon_women_hormonal"],
+      "show": ["addon_dna", "addon_supplement", "addon_athlete", "addon_family_2", "addon_family_4", "addon_men_fitness", "addon_lab_interpretation"],
+      "reason": "Women's Hormonal Health content (PCOS, menstrual cycle, estrogen protocols) is not applicable for male profiles."
+    },
+    "female": {
+      "hide": ["addon_men_fitness"],
+      "show": ["addon_dna", "addon_supplement", "addon_athlete", "addon_family_2", "addon_family_4", "addon_women_hormone", "addon_lab_interpretation"],
+      "reason": "Men's Performance Pack (testosterone optimization, male-specific protocols) is not applicable for female profiles."
+    },
+    "other": {
+      "hide": [],
+      "show": "all",
+      "reason": "All addons available for non-binary profiles."
+    },
+    "non-binary": {
+      "hide": [],
+      "show": "all",
+      "reason": "All addons available for non-binary profiles."
+    }
+  },
+
+  "deprecated_addons": {
+    "addon_products": "Folded into Pro+ tier (premium_blueprint, coaching_blueprint, subscription_all_access). Cannot be purchased directly.",
+    "addon_family":   "Replaced by addon_family_2 / addon_family_4. Legacy id retained for historic-order resolution only."
+  },
+
+  "addon_definitions": {
+    "addon_dna":             { "id": "addon_dna",             "name": "DNA & Genetics Pack",         "gender_applicable": ["male","female","other","non-binary"], "description": "Gene-to-action decision engine (MTHFR, CYP1A2, ACTN3, FTO)" },
+    "addon_supplement":      { "id": "addon_supplement",      "name": "Advanced Supplement Protocol","gender_applicable": ["male","female","other","non-binary"], "description": "12-week phased cycling + stacking logic" },
+    "addon_athlete":         { "id": "addon_athlete",         "name": "Athletic Performance Pack",   "gender_applicable": ["male","female","other","non-binary"], "description": "Periodization + sport nutrition + recovery science" },
+    "addon_family_2":        { "id": "addon_family_2",        "name": "Family Plan — 2 Reports",     "gender_applicable": ["male","female","other","non-binary"], "description": "Two personalized reports with shared-meal modifier table" },
+    "addon_family_4":        { "id": "addon_family_4",        "name": "Family Plan — 4 Reports",     "gender_applicable": ["male","female","other","non-binary"], "description": "Four personalized reports with shared-meal modifier table" },
+    "addon_women_hormone":   { "id": "addon_women_hormone",   "name": "Women's Hormonal Health",     "gender_applicable": ["female","other","non-binary"],        "description": "PCOS, menstrual cycle nutrition, hormonal balance (auto-included for PCOS/thyroid/perimenopausal)" },
+    "addon_men_fitness":     { "id": "addon_men_fitness",     "name": "Men's Performance Pack",      "gender_applicable": ["male","other","non-binary"],          "description": "Testosterone optimization, male-specific training protocols" },
+    "addon_lab_interpretation": { "id": "addon_lab_interpretation", "name": "Quarterly Lab-Test Interpretation", "gender_applicable": ["male","female","other","non-binary"], "description": "Quarterly lab panel personalized to your profile, each marker mapped to a plan adjustment" }
+  },
+
+  "validation_rules": [
+    { "if_gender": "male",   "reject_addons": ["addon_women_hormone","addon_women_hormonal"], "error_code": "GENDER_ADDON_MISMATCH", "message": "Women's Hormonal Health add-on cannot be purchased for a male profile." },
+    { "if_gender": "female", "reject_addons": ["addon_men_fitness"],                          "error_code": "GENDER_ADDON_MISMATCH", "message": "Men's Performance Pack add-on cannot be purchased for a female profile." },
+    { "if_gender": "*",      "reject_addons": ["addon_products"],                             "error_code": "ADDON_DEPRECATED",      "message": "Product Recommendations is no longer sold separately — it is included in Personalized Pro+ and above." },
+    { "if_gender": "*",      "reject_addons": ["addon_family"],                               "error_code": "ADDON_DEPRECATED",      "message": "Family Wellness Plan has been replaced by Family Plan — 2 Reports and Family Plan — 4 Reports." }
+  ]
+}
